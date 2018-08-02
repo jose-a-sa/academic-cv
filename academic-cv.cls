@@ -381,7 +381,6 @@
 %   FOOTER
 %-------------------------------------------------------------------------------
 
-
 \newcommand*{\makefooter}[3]{%
   \fancyfoot{}
   \fancyfoot[L]{\footerstyle{#1}}
@@ -391,88 +390,8 @@
 
 
 %-------------------------------------------------------------------------------
-%   COMMON ENVIRONMENTS
-%-------------------------------------------------------------------------------
-
-\newenvironment{cvsection}[1]{%
-  \sectionstyle{#1}%
-  \phantomsection%
-  \vhrulefill{1.25pt}%
-  \par\color{text}%
-  \vspace*{\begincvsectionskip}%
-}{%
-  \ifbool{detailed}{\newpage}{\vspace*{\cvsectionskip}}%
-}%
-
-\newbool{datecolumnleft}
-\setbool{datecolumnleft}{true}
-
-\newenvironment{cventries}[1][left]{%
-  \def\@cvdatealign{left}
-  \@for\tmp:=#1\do{%
-    \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right}}%
-      {\let\@cvdatealign\tmp}{}%
-  }%
-  \ifthenelse{\equal{\@cvdatealign}{left}}{%
-    \setbool{datecolumnleft}{true}%
-  }{%
-    \setbool{datecolumnleft}{false}%
-  }%
-}{%
-  \vspace*{\cventriesskip}%
-}%
-
-\newcommand{\cventry}[5]{%
-  \extrarowheight=-1pt%
-  \ifbool{datecolumnleft}{%
-    \tabcolsep=5pt%
-    \begin{tabular*}{\textwidth}{R{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}
-      \baselineskip=8pt\entrydatestyle{#1} & \baselineskip=8pt\entrytitlestyle{#2} \\[-1pt]%
-      & \baselineskip=8pt\entrylocationstyle{#3}%
-      \ifempty{#4}{}{\\%
-        & \baselineskip=8pt\entrymarkstyle{#4}%
-      }%
-      \ifempty{#5}{}{\\%
-        & \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5}%
-      }%
-    \end{tabular*}%
-  }{%
-    \tabcolsep=0pt%
-    \begin{tabular*}{\textwidth}{L{\textwidth-\datecolumnwidth-3.5\tabcolsep}R{\datecolumnwidth}}
-      \baselineskip=8pt\entrytitlestyle{#2} & \baselineskip=8pt\entrydatestyle{#1} \\[-1pt]%
-      \baselineskip=8pt\entrylocationstyle{#3} & %
-      \ifempty{#4}{}{\\%
-        \baselineskip=8pt\entrymarkstyle{#4} & %
-      }%
-      \ifempty{#5}{}{\\%
-      \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5} & %
-      }%
-    \end{tabular*}%
-  }%
-  \vspace*{\cventryskip}%
-}%
-
-
-\newenvironment{cvitems}{%
-  \vspace*{-12pt}%
-  \begin{justify}%
-  \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-20pt]%
-    \renewcommand{\labelitemi}{\bullet}%
-    \baselineskip=11pt\parskip=1pt%
-}{%
-  \end{itemize}%
-  \end{justify}%
-  \vspace*{-12pt}%
-  \baselineskip=11pt\parskip=1pt
-}%
-
-
-
-
-%-------------------------------------------------------------------------------
 %   HEADER (SHORT)
 %-------------------------------------------------------------------------------
-
 
 \newcommand*{\drawphoto}{%
   \ifdefined\@photo
@@ -491,10 +410,11 @@
 }
 
 
-\newsavebox\ANDbox\sbox\ANDbox{\headersocialstyle{\headersocialsep}}%
-\newcommand{\ANDbar}{\unskip%
+% Use to separate things in the social bar
+\newsavebox\SocialSepBox\sbox\SocialSepBox{\headersocialstyle{\headersocialsep}}%
+\newcommand{\SocialSep}{\unskip%
   \hskip 3pt plus 1pt minus 2pt%
-  \cleaders\copy\ANDbox\hskip\wd\ANDbox%
+  \cleaders\copy\SocialSepBox\hskip\wd\SocialSepBox%
   \hskip 3pt plus 1pt minus 2pt%
   \ignorespaces
 }%
@@ -503,7 +423,7 @@
 \newbool{socialstart}%
 \newcommand{\parsesocial}[3][]{%
   \foreach\id in #2{%
-    \ifbool{socialstart}{\setbool{socialstart}{false}}{\ANDbar}%
+    \ifbool{socialstart}{\setbool{socialstart}{false}}{\SocialSep}%
     \mbox{\ifempty{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
   }%
 }%
@@ -580,9 +500,117 @@
 
 
 %-------------------------------------------------------------------------------
-%   FRONT COVER (DETAILED)
+%   CV SECTIONS
 %-------------------------------------------------------------------------------
 
+\renewcommand{\section}[1]{%
+  \sectionstyle{#1}%
+  \phantomsection%
+  \vhrulefill{1.25pt}%
+  \par\color{text}%
+  \vspace*{\begincvsectionskip}%
+}%
+
+
+\newcommand{\clearsection}{%
+  \ifbool{detailed}{\newpage}{\vspace*{\cvsectionskip}}%
+}%
+
+
+%-------------------------------------------------------------------------------
+%   CV SKILLS
+%-------------------------------------------------------------------------------
+
+\newcommand{\cvskill}[2]{%
+  \fieldheaderstyle{#1} & \baselineskip=12pt\fieldentrystyle{#2} \\%
+}
+
+
+\newenvironment{cvskills}{%
+  \tabcolsep=5pt%
+  \extrarowheight=5pt%
+  \vspace*{-0.5\baselineskip}
+  \begin{tabular*}{\textwidth}{R{1.5\datecolumnwidth+\tabcolsep}L{\textwidth-1.5\datecolumnwidth-3.5\tabcolsep}}%
+}{%
+  \end{tabular*}%
+}%
+
+
+%-------------------------------------------------------------------------------
+%   CV ENTRIES
+%-------------------------------------------------------------------------------
+
+\newbool{datecolumnleft}
+\setbool{datecolumnleft}{true}
+
+\newenvironment{cventries}[1][left]{%
+  \def\@cvdatealign{left}
+  \@for\tmp:=#1\do{%
+    \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right}}%
+      {\let\@cvdatealign\tmp}{}%
+  }%
+  \ifthenelse{\equal{\@cvdatealign}{left}}{%
+    \setbool{datecolumnleft}{true}%
+  }{%
+    \setbool{datecolumnleft}{false}%
+  }%
+}{%
+  \vspace*{\cventriesskip}%
+}%
+
+
+\newcommand{\cventry}[5]{%
+  \extrarowheight=-1pt%
+  \ifbool{datecolumnleft}{%
+    \tabcolsep=5pt%
+    \begin{tabular*}{\textwidth}{R{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}
+      \baselineskip=8pt\entrydatestyle{#1} & \baselineskip=8pt\entrytitlestyle{#2} \\[-1pt]%
+      & \baselineskip=8pt\entrylocationstyle{#3}%
+      \ifempty{#4}{}{\\%
+        & \baselineskip=8pt\entrymarkstyle{#4}%
+      }%
+      \ifempty{#5}{}{\\%
+        & \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5}%
+      }%
+    \end{tabular*}%
+  }{%
+    \tabcolsep=0pt%
+    \begin{tabular*}{\textwidth}{L{\textwidth-\datecolumnwidth-3.5\tabcolsep}R{\datecolumnwidth}}
+      \baselineskip=8pt\entrytitlestyle{#2} & \baselineskip=8pt\entrydatestyle{#1} \\[-1pt]%
+      \baselineskip=8pt\entrylocationstyle{#3} & %
+      \ifempty{#4}{}{\\%
+        \baselineskip=8pt\entrymarkstyle{#4} & %
+      }%
+      \ifempty{#5}{}{\\%
+      \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5} & %
+      }%
+    \end{tabular*}%
+  }%
+  \vspace*{\cventryskip}%
+}%
+
+
+%-------------------------------------------------------------------------------
+%   CV ITEMS
+%-------------------------------------------------------------------------------
+
+\newenvironment{cvitems}{%
+  \vspace*{-12pt}%
+  \begin{justify}%
+  \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-20pt]%
+    \renewcommand{\labelitemi}{\bullet}%
+    \baselineskip=11pt\parskip=1pt%
+}{%
+  \end{itemize}%
+  \end{justify}%
+  \vspace*{-12pt}%
+  \baselineskip=11pt\parskip=1pt
+}%
+
+
+%-------------------------------------------------------------------------------
+%   FRONT COVER (DETAILED)
+%-------------------------------------------------------------------------------
 
 \newcommand*{\maketitlepage}{%
   \thispagestyle{empty}
@@ -603,7 +631,6 @@
 %-------------------------------------------------------------------------------
 %   PERSONAL SECTION (DETAILED)
 %-------------------------------------------------------------------------------
-
 
 \newcommand{\parsepersonal}[1]{%
   \ifbool{detailed}{\renewcommand*{\dotsep}{\linebreak}}{}%
@@ -637,7 +664,7 @@
       % Personal pages, portfolios and repositories
       \ifdefined\@homepage\personaldetailentry{\@homepage}{Homepage}\fi%
       \ifdefined\@linkedin\personaldetailentry{\@linkedin}{LinkedIn}\fi%
-      \ifdefined\@github\personaldetailentry{\@github}{GitHub}\fi%
+      \ifdefined\@github\personaldetailentry{\@gitafterhub}{GitHub}\fi%
       \ifdefined\@gilab\personaldetailentry{\@gitlab}{GitLab}\fi%
       \ifdefined\@orcid\personaldetailentry{\@orcid}{Orcid}\fi%
       %Other social
@@ -650,11 +677,9 @@
 }%
 
 
-
 %-------------------------------------------------------------------------------
 %   MAKE CV HEADER (SHORT) / FRONT+PERSONAL (DETAILED) 
 %-------------------------------------------------------------------------------
-
 
 \renewcommand*{\maketitle}[1][C]{
   \ifbool{detailed}{%
@@ -680,6 +705,7 @@
   \par\nobreak\addvspace{1pt}%
 }
 
+
 \newcommand*{\makelettertitle}{%
   \raggedright%
   \tabcolsep=0pt%
@@ -692,6 +718,7 @@
   \ifdefined\@letteropening\lettertextstyle{\@letteropening}\vspace{0.3\baselineskip}\fi%
 }
 
+
 \newcommand*{\makeletterclosing}{%
   \vspace{0.25\baselineskip}
   \raggedright
@@ -699,6 +726,7 @@
   \ifdefined\@letterclosing\vspace{0.5\baselineskip}\lettertextstyle{\@letterclosing}\vspace{0.5\baselineskip}\\\letternamestyle{\@firstname\ \@lastname}\\ \fi%
   \ifdefined\@letterenclosure\vspace{1.5\baselineskip}\letterenclosurestyle{\ifdefined\@letterenclname\underline{\@letterenclname}:\space\fi\@letterenclosure}\\ \fi%
 }
+
 
 \newenvironment{cvletter}{%
   \makelettertitle
