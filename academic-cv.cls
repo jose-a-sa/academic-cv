@@ -104,7 +104,6 @@
 }
 
 
-
 %-------------------------------------------------------------------------------
 %   SPACINGS & LAYOUT
 %-------------------------------------------------------------------------------
@@ -112,8 +111,7 @@
 % Document lengths
 \global\parskip=0pt
 \global\parindent=0pt
-\global\baselineskip=11pt
-
+\global\baselineskip=12pt
 
 % Document lengths
 \newlength\headertextwidth
@@ -145,7 +143,8 @@
 \setlength\begincvsectionskip{7mm plus 1mm minus 3mm}
 \setlength\cvsectionskip{8mm plus 1mm minus 2mm}
 \setlength\cventryskip{3mm plus 0.5mm minus 1mm}
-\setlength\cventriesskip{6mm plus 1mm minus 2mm}
+\setlength\cventriesskip{7mm plus 4mm minus 2mm}
+
 
 \ifbool{detailed}{
   \setlength\topspacing{20mm}
@@ -161,7 +160,6 @@
 \setlength\headerboxheight{\dimexpr\headerheight+\topspacing\relax}
 \addtolength{\headerboxheight}{0.25\befheadernameskip}
 
-
 %% Geometry
 \geometry{left=\sidespacing, top=\topspacing, right=\sidespacing, bottom=\bottomspacing, footskip=\footskipspacing}
 
@@ -174,6 +172,7 @@
 \fancyhf{}
 % Enable if you want to make header or footer using fancyhdr
 \pagestyle{fancy}
+
 
 %-------------------------------------------------------------------------------
 %   COLOR
@@ -204,7 +203,6 @@
 
 % CV entry
 \newcommand*{\entrydatecolor}[1]{\ifbool{coloraccents}{{\color{accent}#1}}{{\color{sectioncolor}#1}}}
-
 
 
 %-------------------------------------------------------------------------------
@@ -253,7 +251,6 @@
 \newcommand*{\bodyfontlight}{\sourcesansprolight}
 
 
-
 %-------------------------------------------------------------------------------
 %   UTILITIES
 %-------------------------------------------------------------------------------
@@ -265,6 +262,10 @@
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+% Define columns
+\newcolumntype{\cventryalignleft}[1]{L{#1}}
+\newcolumntype{\cventryalignright}[1]{R{#1}}
 
 % Social bar
 \newcommand\headericonsep{\space}
@@ -295,18 +296,20 @@
 \newcommand*{\footerstyle}[1]{{\fontsize{9pt}{1em}\footerfont\scshape\color{lighttext}#1}}
 
 % SECTION
-\newcommand*{\sectionstyle}[1]{{\fontsize{18pt}{1em}\bodyfont\scshape\bfseries\color{sectioncolor}\@sectionaccent#1}}
+\newcommand*{\sectionstyle}[1]{{\fontsize{19pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
+% \newcommand*{\sectionstyle}[1]{{\fontsize{18pt}{1em}\bodyfont\bfseries\scshape\color{sectioncolor}\@sectionaccent#1}}
+\newcommand*{\subsectionstyle}[1]{{\fontsize{18pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
 
-% ENTRY
+% ENTRIES
 \newcommand*{\entrydatestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\slshape\entrydatecolor{#1}}}
 \newcommand*{\entrytitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\color{text}#1}}
 \newcommand*{\entrylocationstyle}[1]{{\fontsize{10.0pt}{1em}\bodyfont\scshape\color{lighttext}#1}}
 \newcommand*{\entrymarkstyle}[1]{{\fontsize{9pt}{1em}\headerfont\color{darktext}#1}}
 \newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text}#1}}
 
-% FIELD
-\newcommand*{\fieldheaderstyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\scshape\color{text}{#1}}}
-\newcommand*{\fieldentrystyle}[1]{{\fontsize{10pt}{1em}\bodyfont\color{darktext}{#1}}}
+% ROWS
+\newcommand*{\rowtitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\scshape\color{text}{#1}}}
+\newcommand*{\rowtextstyle}[1]{{\fontsize{10pt}{1em}\bodyfont\color{darktext}{#1}}}
 
 % COVER LETTER
 \newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\scshape\bfseries\color{sectioncolor}\@sectionaccent#1}}
@@ -320,11 +323,11 @@
 \newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=5pt\baselineskip=12pt}
 
 
-
 %----------------------------------------------------------------0---------------
 %                Commands for personal information
 %-------------------------------------------------------------------------------
 
+% Photo url command
 \newcommand{\photo}[2][circle,edge,left]{%
   \def\@photo{#2}
   \@for\tmp:=#1\do{%
@@ -345,7 +348,7 @@
 \newcommand*{\fullname}[1]{\def\@fullname{#1}}
 \newcommand*{\birthdate}[1]{\def\@birthdate{#1}}
 \newcommand*{\nationality}[1]{\def\@nationality{#1}}
-\newcommand*{\address}[1]{\def\@address{#1}}
+\newcommand*{\address}[2]{\ifempty{#2}{\def\@address{#1}}{\def\@address{#1}\def\@addressother{#2}}}
 \newcommand*{\position}[1]{\def\@position{#1}}
 % Contacts
 \newcommand*{\phone}[1]{\def\@phone{#1}}
@@ -381,6 +384,7 @@
 %   FOOTER
 %-------------------------------------------------------------------------------
 
+% Make footer using fancyhr
 \newcommand*{\makefooter}[3]{%
   \fancyfoot{}
   \fancyfoot[L]{\footerstyle{#1}}
@@ -393,6 +397,7 @@
 %   HEADER (SHORT)
 %-------------------------------------------------------------------------------
 
+% Draw a photo with TikZ
 \newcommand*{\drawphoto}{%
   \ifdefined\@photo
     \newlength{\photodim}
@@ -409,7 +414,6 @@
   \fi%
 }
 
-
 % Use to separate things in the social bar
 \newsavebox\SocialSepBox\sbox\SocialSepBox{\headersocialstyle{\headersocialsep}}%
 \newcommand{\SocialSep}{\unskip%
@@ -419,7 +423,7 @@
   \ignorespaces
 }%
 
-
+% Parse social multiple entries
 \newbool{socialstart}%
 \newcommand{\parsesocial}[3][]{%
   \foreach\id in #2{%
@@ -428,7 +432,7 @@
   }%
 }%
 
-
+% Print out the social labels
 \newcommand*{\drawsocialbar}[1][center]{%
   \def\@barsocialalign{center}
   \@for\tmp:=#1\do{%
@@ -459,7 +463,7 @@
 	}%
 }%
 
-
+% Draw the header with/without photo, name, position, ..., and social bar
 \newcommand*{\makeheader}[1][center]{%
   \def\@cvheaderalign{center}
   \@for\tmp:=#1\do{%
@@ -489,6 +493,7 @@
     \headernamestyle{\@firstname}{\@lastname}\par%
     \ifdefined\@position\baselineskip=11pt\headerpositionstyle{\@position}\par\fi%
     \ifdefined\@address\headeraddressstyle{\@address}\par\fi%
+    \ifdefined\@addressother\headeraddressstyle{\@addressother}\par\fi%
     \vspace*{\befsocialbarskip}%
     \drawsocialbar[\@cvheaderalign]%
   \end{minipage}%
@@ -503,6 +508,7 @@
 %   CV SECTIONS
 %-------------------------------------------------------------------------------
 
+% Renew the section to the new cvsection
 \renewcommand{\section}[1]{%
   \sectionstyle{#1}%
   \phantomsection%
@@ -511,7 +517,7 @@
   \vspace*{\begincvsectionskip}%
 }%
 
-
+% Clears section, adds a page break if the detailed flag is included
 \newcommand{\clearsection}{%
   \ifbool{detailed}{\newpage}{\vspace*{\cvsectionskip}}%
 }%
@@ -521,16 +527,15 @@
 %   CV SKILLS
 %-------------------------------------------------------------------------------
 
-\newcommand{\cvskill}[2]{%
-  \fieldheaderstyle{#1} & \baselineskip=12pt\fieldentrystyle{#2} \\%
+\newcommand{\cvrow}[2]{%
+  \rowtitlestyle{#1} & \baselineskip=12pt\rowtextstyle{#2} \\%
 }
 
-
-\newenvironment{cvskills}{%
+\newenvironment{cvrows}{%
   \tabcolsep=5pt%
   \extrarowheight=5pt%
   \vspace*{-0.5\baselineskip}
-  \begin{tabular*}{\textwidth}{R{1.5\datecolumnwidth+\tabcolsep}L{\textwidth-1.5\datecolumnwidth-3.5\tabcolsep}}%
+  \begin{tabular*}{\textwidth}{R{\datecolumnwidth+\tabcolsep}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}%
 }{%
   \end{tabular*}%
 }%
@@ -561,9 +566,10 @@
 
 \newcommand{\cventry}[5]{%
   \extrarowheight=-1pt%
+  \tabcolsep=5pt%
   \ifbool{datecolumnleft}{%
     \tabcolsep=5pt%
-    \begin{tabular*}{\textwidth}{R{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}\cventryalignleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}
       \baselineskip=8pt\entrydatestyle{#1} & \baselineskip=8pt\entrytitlestyle{#2} \\[-1pt]%
       & \baselineskip=8pt\entrylocationstyle{#3}%
       \ifempty{#4}{}{\\%
@@ -574,8 +580,7 @@
       }%
     \end{tabular*}%
   }{%
-    \tabcolsep=0pt%
-    \begin{tabular*}{\textwidth}{L{\textwidth-\datecolumnwidth-3.5\tabcolsep}R{\datecolumnwidth}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}\cventryalignright{\datecolumnwidth}@{\extracolsep{\fill}}}
       \baselineskip=8pt\entrytitlestyle{#2} & \baselineskip=8pt\entrydatestyle{#1} \\[-1pt]%
       \baselineskip=8pt\entrylocationstyle{#3} & %
       \ifempty{#4}{}{\\%
@@ -632,48 +637,42 @@
 %   PERSONAL SECTION (DETAILED)
 %-------------------------------------------------------------------------------
 
-\newcommand{\parsepersonal}[1]{%
-  \ifbool{detailed}{\renewcommand*{\dotsep}{\linebreak}}{}%
-  \foreach\id in #1{%
-    \id\linebreak%
+\newcommand{\parsepersonal}[2][]{%
+  \ifbool{detailed}{\renewcommand*{\dotsep}{\vspace{1pt}\linebreak}}{}%
+  \baselineskip=12pt%
+  \foreach\id in #2{%
+    \ifempty{#1}{\id}{\href{#1\id}{\id}}\vspace{1pt}\linebreak%
   }%
-  \unskip\unpenalty
+  \unpenalty\unskip\unpenalty%
 }%
 
-
-\newcommand\personaldetailentry[2]{%
-  \fieldheaderstyle{#2} & \baselineskip=12pt\fieldentrystyle{\parsepersonal{#1}} \\%
-}
-
-
 \newcommand{\makepersonaldetails}{%
-  \begin{cvsection}{Personal details}%
-    \tabcolsep=5pt%
-    \extrarowheight=3pt%
-    \vspace*{-0.5\baselineskip}%
-    \begin{tabular*}{\textwidth}{R{\datecolumnwidth+\tabcolsep}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}%
-      % All personal
-      \ifdefined\@fullname\personaldetailentry{\@fullname}{Full name}\fi%
-      \ifdefined\@nationality\personaldetailentry{\@nationality}{Nationality}\fi%
-      \ifdefined\@birthdate\personaldetailentry{\@birthdate}{Birthdate}\fi%
-      \ifdefined\@address\personaldetailentry{\@address}{Address}\fi%
-      % Contacts
-      \ifdefined\@phone\personaldetailentry{\@phone}{Cellphone}\fi%
-      \ifdefined\@email\personaldetailentry{\@email}{Email}\fi%
-      \ifdefined\@skype\personaldetailentry{\@skype}{Skype}\fi%
-      % Personal pages, portfolios and repositories
-      \ifdefined\@homepage\personaldetailentry{\@homepage}{Homepage}\fi%
-      \ifdefined\@linkedin\personaldetailentry{\@linkedin}{LinkedIn}\fi%
-      \ifdefined\@github\personaldetailentry{\@gitafterhub}{GitHub}\fi%
-      \ifdefined\@gilab\personaldetailentry{\@gitlab}{GitLab}\fi%
-      \ifdefined\@orcid\personaldetailentry{\@orcid}{Orcid}\fi%
-      %Other social
-      \ifdefined\@facebook\personaldetailentry{\@facebook}{Facebook}\fi%
-      \ifdefined\@twitter\personaldetailentry{\@twitter}{Twitter}\fi%
-      \ifdefined\@reddit\personaldetailentry{\@reddit}{Reddit}\fi%
-      \ifdefined\@stackoverflowid\personaldetailentry{\@stackoverflowid}{Stack Overflow}\fi%
-    \end{tabular*}%
-  \end{cvsection}%
+  \section{Personal details}%
+  \begin{cvrows}%
+    % All personal
+    \ifdefined\@fullname\cvrow{Full name}{\parsepersonal{\@fullname}}\fi%
+    \ifdefined\@nationality\cvrow{Nationality}{\parsepersonal{\@nationality}}\fi%
+    \ifdefined\@birthdate\cvrow{Birthdate}{\parsepersonal{\@birthdate}}\fi%
+    \ifdefined\@address\cvrow{Address}{\parsepersonal{\@address}%
+        \ifdefined\@addressother\linebreak\parsepersonal{\@addressother}\fi%
+      }\fi%
+    % Contacts
+    \ifdefined\@phone\cvrow{Cellphone}{\parsepersonal{\@phone}}\fi%
+    \ifdefined\@email\cvrow{Email}{\parsepersonal[mailto:]{\@email}}\fi%
+    \ifdefined\@skype\cvrow{Skype}{\parsepersonal{\@skype}}\fi%
+    % Personal pages, portfolios and repositories
+    \ifdefined\@homepage\cvrow{Homepage}{\parsepersonal[http://]{\@homepage}}\fi%
+    \ifdefined\@linkedin\cvrow{LinkedIn}{\parsepersonal[https://www.linkedin.com/in/]{\@linkedin}}\fi%
+    \ifdefined\@github\cvrow{GitHub}{\parsepersonal[https://github.com/]{\@github}}\fi%
+    \ifdefined\@gilab\cvrow{GitLab}{\parsepersonal[https://gitlab.com/]{\@gilab}}\fi%
+    \ifdefined\@orcid\cvrow{Orcid}{\parsepersonal[https://orcid.org/]{\@orcid}}\fi%
+    %Other social
+    \ifdefined\@facebook\cvrow{Facebook}{\parsepersonal[https://facebook.com/]{\@facebook}}\fi%
+    \ifdefined\@twitter\cvrow{Twitter}{\parsepersonal[https://twitter.com/]{\@twitter}}\fi%
+    \ifdefined\@reddit\cvrow{Reddit}{\parsepersonal[https://www.reddit.com/user/]{\@reddit}}\fi%
+    \ifdefined\@stackoverflowid\cvrow{Stack Overflow}{\parsepersonal[https://stackoverflow.com/users/]{\@stackoverflowid}}\fi%
+  \end{cvrows}%
+  \clearsection
 }%
 
 

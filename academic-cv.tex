@@ -12,9 +12,12 @@
 %-------------------------------------------------------------------------------
 
 % For more colors check the package 'xcolor-material'
-\colorlet{accent}{MaterialBlue600}
+\colorlet{accent}{MaterialTeal500}
 
 %\datecolumnwidth=35mm
+%\newcolumntype{\cventryalignleft}[1]{R{#1}}
+
+
 
 %-------------------------------------------------------------------------------
 %	PERSONAL INFORMATION
@@ -28,19 +31,19 @@
 \birthdate{1st January 1990}
 \nationality{Country}
 \position{Position}
-\address{Adress line 1\linebreak Adress line 2\dotsep Zip-Code\dotsep Country}
+\address{Adress line 1}{Adress line 2\dotsep Zip-Code\dotsep Country}
 \phone{(+0123) 987654321}
 \email{{email1@domain.com}, {email1@domain.com}}
 \skype{skype-id}
 \homepage{jonh-doe.com}
 \linkedin{linkedin-user}
 \github{github-user}
-\gitlab{gitlab-user}
+%\gitlab{gitlab-user}
 \orcid{0000-0001-2345-6789}
-\facebook{fb-user}
+%\facebook{fb-user}
 \twitter{@tw-handle}
-\reddit{rd-user}
-\stackoverflow{stackoverflow-id}
+%\reddit{rd-user}
+%\stackoverflow{stackoverflow-id}
 
 
 \begin{document}
@@ -55,6 +58,7 @@
 %\makepersonaldetails
 
 \input{cv/section1}
+\makepersonaldetails
 \input{cv/section2}
 
 
