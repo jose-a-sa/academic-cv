@@ -322,12 +322,11 @@
 
 % SECTION
 \newcommand*{\sectionstyle}[1]{{\fontsize{19pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
-% \newcommand*{\sectionstyle}[1]{{\fontsize{18pt}{1em}\bodyfont\bfseries\scshape\color{sectioncolor}\@sectionaccent#1}}
 \newcommand*{\subsectionstyle}[1]{{\fontsize{18pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
 
 % ENTRIES
 \newcommand*{\entrydatestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\slshape\entrydatecolor{#1}}}
-\newcommand*{\entrytitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\color{text}#1}}
+\newcommand*{\entrytitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfontlight\bfseries\color{text}#1}}
 \newcommand*{\entrylocationstyle}[1]{{\fontsize{10pt}{1em}\bodyfont\scshape\color{lighttext}#1}}
 \newcommand*{\entrymarkstyle}[1]{{\fontsize{9pt}{1em}\headerfont\color{darktext}#1}}
 \newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9.5pt}{1em}\bodyfontlight\upshape\color{text}#1}}
@@ -700,6 +699,10 @@
 %-------------------------------------------------------------------------------
 
 \renewcommand*{\maketitle}[1][C]{
+  \makefooter
+  {\today}
+  { \dotsep Curriculum Vitae}
+  {\thepage}
   \ifdetailed%
     \maketitlepage%
     \makepersonaldetails%
