@@ -1,31 +1,27 @@
 \ProvidesClass{academic-cv}[Modular Curriculum Vitae]
 \NeedsTeXFormat{LaTeX2e}
 
-
-% Needed to use a toolbox of programming tools
-\RequirePackage{etoolbox}
 % Boolean value to switch color highlighting
-\newbool{coloraccents}
-\setbool{coloraccents}{true}
+\newif\ifcoloraccents
+\coloraccentstrue
 % Boolean value to switch header color
-\newbool{colorheader}
-\setbool{colorheader}{false}
+\newif\ifcolorheader
+\colorheaderfalse
 % Boolean value to switch between short and full cv
-\newbool{detailed}
-\setbool{detailed}{false}
+\newif\ifdetailed
+\detailedfalse
 % Boolean value to add a side panel
-\newbool{resume}
-\setbool{resume}{false}
+\newif\ifresume
+\resumefalse
 % Boolean value to add a side panel
-\newbool{letter}
-\setbool{letter}{false}
+\newif\ifletter
+\letterfalse
 
-\DeclareOption{resume}{\setbool{resume}{true}}
-\DeclareOption{detailed}{\setbool{detailed}{true}}
-\DeclareOption{fill}{\setbool{colorheader}{true}}
-\DeclareOption{noaccent}{\setbool{coloraccents}{false}\setbool{colorheader}{false}}
-\DeclareOption{letter}{\setbool{letter}{true}\setbool{detailed}{false}}
-
+\DeclareOption{resume}{\resumetrue}
+\DeclareOption{detailed}{\detailedtrue}
+\DeclareOption{fill}{\colorheadertrue}
+\DeclareOption{noaccent}{\coloraccentsfalse\colorheaderfalse}
+\DeclareOption{letter}{\lettertrue\detailedfalse}
 
 \setlength\overfullrule{0pt}
 
@@ -45,7 +41,7 @@
 \RequirePackage{tikz}
 \usetikzlibrary{positioning,calc}
 % Needed to make fixed length table
-\RequirePackage{array}
+\RequirePackage{array, longtable}
 % Needed to handle list environment
 \RequirePackage{enumitem}
 % Needed to handle text alignment
@@ -62,7 +58,7 @@
 \RequirePackage{ifxetex}
 % Needed to use \if-\then-\else statement
 \RequirePackage{xifthen}
-% Needed to use a toolbox of programming tools
+% Needed to use a toolbox of programming toolsv
 \RequirePackage{etoolbox}
 % Needed to change line spacing in specific environment
 %\RequirePackage{setspace}
@@ -93,15 +89,15 @@
 \RequirePackage{calc}
 % Needed to deal with lenght calculations
 \RequirePackage{datetime}
-\ifbool{letter}{%
+\ifletter%
   \renewcommand{\today}{\number\day\space
   \ifcase\month \or January\or February\or March\or April\or May\or June\or July%
   \or August\or September\or October\or November\or December\fi\space\number\year}%
-}{%
+\else%
   \renewcommand{\today}{\ifcase\month\or January\or February\or March\or April\or May%
   \or June\or July\or August\or September\or October\or November\or December\fi%
   \space\number\year}%
-}
+\fi%
 
 
 %-------------------------------------------------------------------------------
@@ -141,22 +137,22 @@
 \setlength\afterheaderskip{6mm}
 \setlength\datecolumnwidth{35mm}
 \setlength\begincvsectionskip{7mm plus 1mm minus 3mm}
-\setlength\cvsectionskip{8mm plus 1mm minus 2mm}
-\setlength\cventryskip{3mm plus 0.5mm minus 1mm}
+\setlength\cvsectionskip{6mm plus 1mm minus 2mm}
+\setlength\cventryskip{2mm plus 0.5mm minus 1mm}
 \setlength\cventriesskip{7mm plus 4mm minus 2mm}
 
 
-\ifbool{detailed}{
+\ifdetailed
   \setlength\topspacing{20mm}
   \setlength\sidespacing{20mm}
-  \setlength\bottomspacing{20mm}
-  \setlength\footskipspacing{5mm}
-}{
-    \setlength\topspacing{15mm}
-    \setlength\sidespacing{16mm}
-    \setlength\bottomspacing{20mm}
-    \setlength\footskipspacing{5mm}
-}
+  \setlength\bottomspacing{23mm}
+  \setlength\footskipspacing{10mm}
+\else
+  \setlength\topspacing{15mm}
+  \setlength\sidespacing{16mm}
+  \setlength\bottomspacing{23mm}
+  \setlength\footskipspacing{10mm}
+\fi
 \setlength\headerboxheight{\dimexpr\headerheight+\topspacing\relax}
 \addtolength{\headerboxheight}{0.25\befheadernameskip}
 
@@ -189,20 +185,20 @@
 \colorlet{sectioncolor}{darktext}
 
 % Header/Titlepage
-\newcommand*{\titlepagecolor}{\ifbool{colorheader}{\pagecolor{accent}}{\pagecolor{white}}}
-\newcommand*{\titletextcolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{{\color{lightertext}#1}}}
-\newcommand*{\firstnamecolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{{\color{darktext}#1}}}
-\newcommand*{\lastnamecolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{{\color{text}#1}}}
-\newcommand*{\positioncolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{\ifbool{coloraccents}{{\color{accent}#1}}{{\color{black}#1}}}}
-\newcommand*{\addresscolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{{\color{lightertext}#1}}}
-\newcommand*{\socialcolor}[1]{\ifbool{colorheader}{{\color{white}#1}}{{\color{text}#1}}}
-\newcommand*{\photobordercolor}{\ifbool{colorheader}{white}{MaterialGrey400}}
+\newcommand*{\titlepagecolor}{\ifcolorheader\pagecolor{accent}\else\pagecolor{white}\fi}
+\newcommand*{\titletextcolor}[1]{\ifcolorheader{\color{white}#1}\else{\color{lightertext}#1}\fi}
+\newcommand*{\firstnamecolor}[1]{\ifcolorheader{\color{white}#1}\else{\color{darktext}#1}\fi}
+\newcommand*{\lastnamecolor}[1]{\ifcolorheader{\color{white}#1}\else{\color{text}#1}\fi}
+\newcommand*{\positioncolor}[1]{\ifcolorheader{\color{white}#1}\else\ifcoloraccents{\color{accent}#1}\else{\color{black}#1}\fi\fi}
+\newcommand*{\addresscolor}[1]{\ifcolorheader{\color{white}#1}\else{\color{lightertext}#1}\fi}
+\newcommand*{\socialcolor}[1]{\ifcolorheader{\color{white}#1}\else{\color{text}#1}\fi}
+\newcommand*{\photobordercolor}{\ifcolorheader white\else MaterialGrey400\fi}
 
 % Section
-\def\@sectionaccent#1#2#3{\ifbool{coloraccents}{{\color{accent}#1#2#3}}{#1#2#3}}
+\def\@sectionaccent#1#2#3{\ifcoloraccents{\color{accent}#1#2#3}\else{#1#2#3}\fi}
 
 % CV entry
-\newcommand*{\entrydatecolor}[1]{\ifbool{coloraccents}{{\color{accent}#1}}{{\color{sectioncolor}#1}}}
+\newcommand*{\entrydatecolor}[1]{\ifcoloraccents{\color{accent}#1}\else{\color{sectioncolor}#1}\fi}
 
 
 %-------------------------------------------------------------------------------
@@ -258,14 +254,18 @@
 % Use to draw horizontal line with specific thickness
 \def\vhrulefill#1{\color{sectioncolor}\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
 
+\JustifyingParindent=0pt
+
 % Use to align an element of tabular table
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{J}[1]{>{\justifying\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 
 % Define columns
-\newcolumntype{\cventryalignleft}[1]{L{#1}}
-\newcolumntype{\cventryalignright}[1]{R{#1}}
+\newcolumntype{\cventryaligndateleft}[1]{R{#1}}
+\newcolumntype{\cventryaligndateright}[1]{R{#1}}
+\newcolumntype{\cvrowaligntitle}[1]{R{#1}}
 
 % Social bar
 \newcommand\headericonsep{\space}
@@ -282,6 +282,9 @@
 %    FONT STYLES
 %-------------------------------------------------------------------------------
 
+\newcommand*{\textparagraphstyle}{\parindent=0pt\parskip=3pt\baselineskip=12pt}
+\newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=4pt\baselineskip=12pt}
+
 % TITLEPAGE
 \newcommand*{\titlenamestyle}[2]{{\fontsize{48pt}{1em}\headerfontlight\firstnamecolor{#1}\space\headerfont\bfseries\lastnamecolor{#2}}}
 \newcommand*{\titlepositionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\scshape\positioncolor{#1}}}
@@ -291,8 +294,8 @@
 % HEADER/FOOTER
 \newcommand*{\headernamestyle}[2]{{\fontsize{32pt}{1em}\headerfontlight\firstnamecolor{#1}\space\headerfont\bfseries\lastnamecolor{#2}}}
 \newcommand*{\headerpositionstyle}[1]{{\fontsize{11pt}{1em}\bodyfont\scshape\positioncolor{#1}}}
-\newcommand*{\headeraddressstyle}[1]{{\fontsize{8.5pt}{1.3em}\headerfont\itshape\addresscolor{#1}}}
-\newcommand*{\headersocialstyle}[1]{{\fontsize{8pt}{1.1em}\headerfont\socialcolor{#1}}}
+\newcommand*{\headeraddressstyle}[1]{{\fontsize{8.5pt}{1em}\headerfont\itshape\addresscolor{#1}}}
+\newcommand*{\headersocialstyle}[1]{{\fontsize{8pt}{1em}\headerfont\socialcolor{#1}}}
 \newcommand*{\footerstyle}[1]{{\fontsize{9pt}{1em}\footerfont\scshape\color{lighttext}#1}}
 
 % SECTION
@@ -303,13 +306,13 @@
 % ENTRIES
 \newcommand*{\entrydatestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\slshape\entrydatecolor{#1}}}
 \newcommand*{\entrytitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\color{text}#1}}
-\newcommand*{\entrylocationstyle}[1]{{\fontsize{10.0pt}{1em}\bodyfont\scshape\color{lighttext}#1}}
+\newcommand*{\entrylocationstyle}[1]{{\fontsize{10pt}{1em}\bodyfont\scshape\color{lighttext}#1}}
 \newcommand*{\entrymarkstyle}[1]{{\fontsize{9pt}{1em}\headerfont\color{darktext}#1}}
-\newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text}#1}}
+\newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9.5pt}{1em}\bodyfontlight\upshape\color{text}#1}}
 
 % ROWS
-\newcommand*{\rowtitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfont\bfseries\scshape\color{text}{#1}}}
-\newcommand*{\rowtextstyle}[1]{{\fontsize{10pt}{1em}\bodyfont\color{darktext}{#1}}}
+\newcommand*{\rowtitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\scshape\color{text}{#1}}}
+\newcommand*{\rowtextstyle}{\fontsize{9.5pt}{1em}\bodyfontlight\color{text}}
 
 % COVER LETTER
 \newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\scshape\bfseries\color{sectioncolor}\@sectionaccent#1}}
@@ -317,10 +320,9 @@
 \newcommand*{\recipienttitlestyle}[1]{{\fontsize{10pt}{1em}\headerfont\bfseries\color{darktext} #1}}
 \newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
 \newcommand*{\letterdatestyle}[1]{{\fontsize{10.5pt}{1em}\headerfont\slshape\color{accent} #1}}
-\newcommand*{\lettertextstyle}{\fontsize{10pt}{1.4em}\bodyfontlight\upshape\color{text}}
+\newcommand*{\lettertextstyle}{\fontsize{10pt}{1em}\bodyfontlight\upshape\color{text}}
 \newcommand*{\letternamestyle}[1]{{\fontsize{10pt}{1em}\headerfont\bfseries\color{darktext} #1}}
 \newcommand*{\letterenclosurestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\slshape\color{lightertext} #1}}
-\newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=5pt\baselineskip=12pt}
 
 
 %----------------------------------------------------------------0---------------
@@ -424,10 +426,10 @@
 }%
 
 % Parse social multiple entries
-\newbool{socialstart}%
+\newif\ifsocialstart%
 \newcommand{\parsesocial}[3][]{%
   \foreach\id in #2{%
-    \ifbool{socialstart}{\setbool{socialstart}{false}}{\SocialSep}%
+    \ifsocialstart\socialstartfalse\else\SocialSep\fi%
     \mbox{\ifempty{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
   }%
 }%
@@ -439,7 +441,7 @@
     \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right} \or \equal{\tmp}{center}}%
       {\let\@barsocialalign\tmp}{}%
   }%
-  \setbool{socialstart}{true}%
+  \socialstarttrue%
   \parbox{\textwidth}{%
     \baselineskip=12pt
     \ifthenelse{\equal{\@barsocialalign}{left}}{\raggedright}{\ifthenelse{\equal{\@barsocialalign}{right}}{\raggedleft}{\centering}}%
@@ -512,14 +514,14 @@
 \renewcommand{\section}[1]{%
   \sectionstyle{#1}%
   \phantomsection%
-  \vhrulefill{1.25pt}%
+  \vhrulefill{1pt}%
   \par\color{text}%
   \vspace*{\begincvsectionskip}%
 }%
 
 % Clears section, adds a page break if the detailed flag is included
 \newcommand{\clearsection}{%
-  \ifbool{detailed}{\newpage}{\vspace*{\cvsectionskip}}%
+  \ifdetailed\newpage\else\vspace*{\cvsectionskip}\fi%
 }%
 
 
@@ -528,16 +530,16 @@
 %-------------------------------------------------------------------------------
 
 \newcommand{\cvrow}[2]{%
-  \rowtitlestyle{#1} & \baselineskip=12pt\rowtextstyle{#2} \\%
+  \rowtitlestyle{#1} & \textparagraphstyle\rowtextstyle #2\\%
 }
 
-\newenvironment{cvrows}{%
+\newenvironment{cvrows}[1][L]{%
   \tabcolsep=5pt%
   \extrarowheight=5pt%
-  \vspace*{-0.5\baselineskip}
-  \begin{tabular*}{\textwidth}{R{\datecolumnwidth+\tabcolsep}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}}%
+  \vspace*{-1.5\baselineskip}
+  \begin{longtable}{@{\extracolsep{\fill}}\cvrowaligntitle{\datecolumnwidth+\tabcolsep}#1{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
 }{%
-  \end{tabular*}%
+  \end{longtable}%
 }%
 
 
@@ -545,21 +547,17 @@
 %   CV ENTRIES
 %-------------------------------------------------------------------------------
 
-\newbool{datecolumnleft}
-\setbool{datecolumnleft}{true}
-
+\newif\ifdatecolumnleft
 \newenvironment{cventries}[1][left]{%
   \def\@cvdatealign{left}
   \@for\tmp:=#1\do{%
     \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right}}%
       {\let\@cvdatealign\tmp}{}%
   }%
-  \ifthenelse{\equal{\@cvdatealign}{left}}{%
-    \setbool{datecolumnleft}{true}%
-  }{%
-    \setbool{datecolumnleft}{false}%
-  }%
+  \ifthenelse{\equal{\@cvdatealign}{left}}{\datecolumnlefttrue}{\datecolumnleftfalse}%
+  \begin{center}
 }{%
+  \end{center}
   \vspace*{\cventriesskip}%
 }%
 
@@ -567,9 +565,8 @@
 \newcommand{\cventry}[5]{%
   \extrarowheight=-1pt%
   \tabcolsep=5pt%
-  \ifbool{datecolumnleft}{%
-    \tabcolsep=5pt%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}\cventryalignleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}
+  \ifdatecolumnleft%
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}
       \baselineskip=8pt\entrydatestyle{#1} & \baselineskip=8pt\entrytitlestyle{#2} \\[-1pt]%
       & \baselineskip=8pt\entrylocationstyle{#3}%
       \ifempty{#4}{}{\\%
@@ -579,8 +576,8 @@
         & \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5}%
       }%
     \end{tabular*}%
-  }{%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}\cventryalignright{\datecolumnwidth}@{\extracolsep{\fill}}}
+  \else%
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}\cventryaligndateright{\datecolumnwidth}@{\extracolsep{\fill}}}
       \baselineskip=8pt\entrytitlestyle{#2} & \baselineskip=8pt\entrydatestyle{#1} \\[-1pt]%
       \baselineskip=8pt\entrylocationstyle{#3} & %
       \ifempty{#4}{}{\\%
@@ -590,8 +587,9 @@
       \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5} & %
       }%
     \end{tabular*}%
-  }%
+  \fi%
   \vspace*{\cventryskip}%
+  \linebreak
 }%
 
 
@@ -604,7 +602,7 @@
   \begin{justify}%
   \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-20pt]%
     \renewcommand{\labelitemi}{\bullet}%
-    \baselineskip=11pt\parskip=1pt%
+    \baselineskip=12pt\parskip=2pt%
 }{%
   \end{itemize}%
   \end{justify}%
@@ -638,10 +636,9 @@
 %-------------------------------------------------------------------------------
 
 \newcommand{\parsepersonal}[2][]{%
-  \ifbool{detailed}{\renewcommand*{\dotsep}{\vspace{1pt}\linebreak}}{}%
-  \baselineskip=12pt%
+  \ifdetailed\renewcommand*{\dotsep}{\linebreak}\fi%
   \foreach\id in #2{%
-    \ifempty{#1}{\id}{\href{#1\id}{\id}}\vspace{1pt}\linebreak%
+    \ifempty{#1}{\id}{\href{#1\id}{\id}}\linebreak%
   }%
   \unpenalty\unskip\unpenalty%
 }%
@@ -681,12 +678,12 @@
 %-------------------------------------------------------------------------------
 
 \renewcommand*{\maketitle}[1][C]{
-  \ifbool{detailed}{%
+  \ifdetailed%
     \maketitlepage%
     \makepersonaldetails%
-  }{%
+  \else%
     \makeheader[#1]
-  }%
+  \fi%
 }%
 
 
