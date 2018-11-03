@@ -1,4 +1,23 @@
-\ProvidesClass{academic-cv}[Modular Curriculum Vitae]
+%% Start of file `academic-cv.cls'.
+% Academic CV Class File
+%
+% This class is based on the Awesome CV class by posquit0:
+% https://github.com/posquit0/Awesome-CV
+%
+% Author:
+% Josá Sá <jose.cerq.sa@gmail.com>
+% https://github.com/jose-a-sa/academic-cv
+%
+% Notes:
+% 1) This class file defines the structure and layout of the template file (cv.tex, resume.tex).
+% 2) It has been written in such a way that under most circumstances you
+% should not need to edit it.
+%
+% Class license:
+% LPPL v1.3c (http://www.latex-project.org/lppl)
+%
+
+\ProvidesClass{academic-cv}[Academic Curriculum Vitae]
 \NeedsTeXFormat{LaTeX2e}
 
 % Boolean value to switch color highlighting
@@ -80,11 +99,14 @@
 % Needed to deal hyperlink
 \RequirePackage[hidelinks,unicode]{hyperref}
 \hypersetup{%
-  pdftitle={},
-  pdfauthor={},
-  pdfsubject={},
-  pdfkeywords={}
+  % pdftitle={},
+  pdfauthor={Academic CV class, by José A. Sá},
+  % pdfsubject={},
+  % pdfkeywords={},
+  % pdfproducer={},
+  % pdfcreator={}
 }
+
 % Needed to deal with lenght calculations
 \RequirePackage{calc}
 % Needed to deal with lenght calculations
@@ -537,7 +559,7 @@
   \tabcolsep=5pt%
   \extrarowheight=5pt%
   \vspace*{-1.5\baselineskip}
-  \begin{longtable}{@{\extracolsep{\fill}}\cvrowaligntitle{\datecolumnwidth+\tabcolsep}#1{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
+  \begin{longtable}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
 }{%
   \end{longtable}%
 }%
