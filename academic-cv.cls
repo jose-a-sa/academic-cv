@@ -56,6 +56,12 @@
 %   MAIN PACKAGES
 %-------------------------------------------------------------------------------
 
+% Needed for drawing graphics
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{epstopdf}
+\RequirePackage[export]{adjustbox} 
+
 % Needed for drawing rectanles
 \RequirePackage{tikz}
 \usetikzlibrary{positioning,calc}
@@ -120,7 +126,6 @@
   \or June\or July\or August\or September\or October\or November\or December\fi%
   \space\number\year}%
 \fi%
-
 
 %-------------------------------------------------------------------------------
 %   SPACINGS & LAYOUT
@@ -304,8 +309,8 @@
 %    FONT STYLES
 %-------------------------------------------------------------------------------
 
-\newcommand*{\textparagraphstyle}{\parindent=0pt\parskip=3pt\baselineskip=12pt}
-\newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=4pt\baselineskip=12pt}
+\newcommand*{\textparagraphstyle}{\parindent=0pt\parskip=2pt\baselineskip=11pt}
+\newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=4pt\baselineskip=13pt}
 
 % TITLEPAGE
 \newcommand*{\titlenamestyle}[2]{{\fontsize{48pt}{1em}\headerfontlight\firstnamecolor{#1}\space\headerfont\bfseries\lastnamecolor{#2}}}
@@ -337,10 +342,10 @@
 
 % COVER LETTER
 \newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\scshape\bfseries\color{sectioncolor}\@sectionaccent#1}}
-\newcommand*{\recipientaddressstyle}[1]{{\fontsize{10pt}{1em}\headerfont\itshape\color{lighttext} #1}}
-\newcommand*{\recipienttitlestyle}[1]{{\fontsize{10pt}{1em}\headerfont\bfseries\color{darktext} #1}}
+\newcommand*{\recipientaddressstyle}[1]{{\fontsize{9.5pt}{1em}\headerfont\itshape\color{lighttext} #1}}
+\newcommand*{\recipienttitlestyle}[1]{{\fontsize{9.5pt}{1em}\headerfont\bfseries\color{darktext} #1}}
 \newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
-\newcommand*{\letterdatestyle}[1]{{\fontsize{10.5pt}{1em}\headerfont\slshape\color{accent} #1}}
+\newcommand*{\letterdatestyle}[1]{{\fontsize{10pt}{1em}\headerfont\slshape\color{accent} #1}}
 \newcommand*{\lettertextstyle}{\fontsize{10pt}{1em}\bodyfontlight\upshape\color{text}}
 \newcommand*{\letternamestyle}[1]{{\fontsize{10pt}{1em}\headerfont\bfseries\color{darktext} #1}}
 \newcommand*{\letterenclosurestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\slshape\color{lightertext} #1}}
@@ -396,8 +401,8 @@
 \newcommand*{\letterdate}[1]{\def\@letterdate{#1}}
 \newcommand*{\letteropening}[1]{\def\@letteropening{#1}}
 \newcommand*{\letterclosing}[1]{\def\@letterclosing{#1}}
-\newcommand*{\letterenclname}[1][Enclosure]{\def\@letterenclname{#1}}
-\newcommand*{\letterenclosure}[2][]{%
+\newcommand*{\lettersignature}[2][25mm]{\def\@lettersignature{#2}\def\@signatureheight{#1}}
+\newcommand*{\letterenclosure}[2][Enclosure]{%
   \ifthenelse{\equal{#1}{}}{}{\def\@letterenclname{#1}}
   \def\@letterenclosure{#2}
 }
@@ -434,6 +439,12 @@
     \begin{tikzpicture}%
       \node[\@photoshape, draw=\@photoborder, line width=\photoborderthickness, inner sep=\photodim, fill overzoom image=\@photo] () {};
     \end{tikzpicture}%
+  \fi%
+}
+
+\newcommand*{\drawsignature}{%
+  \ifdefined\@lettersignature
+    \includegraphics[max height=\@signatureheight]{\@lettersignature}
   \fi%
 }
 
@@ -551,6 +562,7 @@
 %-------------------------------------------------------------------------------
 
 \newcommand{\cvrow}[2]{%
+  \textparagraphstyle%
   \rowtitlestyle{#1} & \textparagraphstyle\rowtextstyle #2\\%
 }
 
@@ -582,7 +594,6 @@
   \vspace*{\cventriesskip}%
 }%
 
-
 \newcommand{\cventry}[5]{%
   \extrarowheight=-1pt%
   \tabcolsep=5pt%
@@ -594,8 +605,8 @@
         & \baselineskip=8pt\entrymarkstyle{#4}%
       }%
       \ifempty{#5}{}{\\%
-        & \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5}%
-      }%
+      & \textparagraphstyle\justifying\entrydescriptionstyle{#5}%
+    }%
     \end{tabular*}%
   \else%
     \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}\cventryaligndateright{\datecolumnwidth}@{\extracolsep{\fill}}}
@@ -605,7 +616,7 @@
         \baselineskip=8pt\entrymarkstyle{#4} & %
       }%
       \ifempty{#5}{}{\\%
-      \baselineskip=11pt\parskip=1pt\entrydescriptionstyle{#5} & %
+      \textparagraphstyle\justifying\entrydescriptionstyle{#5} & %
       }%
     \end{tabular*}%
   \fi%
@@ -619,16 +630,16 @@
 %-------------------------------------------------------------------------------
 
 \newenvironment{cvitems}{%
-  \vspace*{-12pt}%
+  \vspace*{-13pt}%
   \begin{justify}%
-  \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-20pt]%
+  \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-13pt]%
+    \textparagraphstyle
     \renewcommand{\labelitemi}{\bullet}%
-    \baselineskip=12pt\parskip=2pt%
 }{%
   \end{itemize}%
   \end{justify}%
-  \vspace*{-12pt}%
-  \baselineskip=11pt\parskip=1pt
+  \vspace*{-11pt}%
+  \textparagraphstyle
 }%
 
 
@@ -699,10 +710,6 @@
 %-------------------------------------------------------------------------------
 
 \renewcommand*{\maketitle}[1][C]{
-  \makefooter
-  {\today}
-  { \dotsep Curriculum Vitae}
-  {\thepage}
   \ifdetailed%
     \maketitlepage%
     \makepersonaldetails%
@@ -721,8 +728,8 @@
   \lettersectionstyle{#1}%recipientname
   \phantomsection%
   \vhrulefill{0.9pt}
-  \letterparagraphstyle
   \lettertextstyle%
+  \letterparagraphstyle
   \par\nobreak\addvspace{1pt}%
 }
 
@@ -744,16 +751,16 @@
   \vspace{0.25\baselineskip}
   \raggedright
   \letterparagraphstyle
-  \ifdefined\@letterclosing\vspace{0.5\baselineskip}\lettertextstyle{\@letterclosing}\vspace{0.5\baselineskip}\\\letternamestyle{\@firstname\ \@lastname}\\ \fi%
-  \ifdefined\@letterenclosure\vspace{1.5\baselineskip}\letterenclosurestyle{\ifdefined\@letterenclname\underline{\@letterenclname}:\space\fi\@letterenclosure}\\ \fi%
+  \ifdefined\@letterclosing\vspace{0.5\baselineskip}\lettertextstyle{\@letterclosing}\vspace{2.0\baselineskip}\\\ifdefined\@lettersignature\drawsignature\else\letternamestyle{\@firstname\ \@lastname}\fi\\ \fi%
+  \ifdefined\@letterenclosure\vspace{2.5\baselineskip}\letterenclosurestyle{\ifdefined\@letterenclname\underline{\@letterenclname}:\space\fi\@letterenclosure}\\ \fi%
 }
 
 
 \newenvironment{cvletter}{%
   \makelettertitle
   \justify
-  \letterparagraphstyle
   \lettertextstyle
+  \letterparagraphstyle
 }{%
   \makeletterclosing
 }

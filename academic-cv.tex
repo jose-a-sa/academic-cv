@@ -21,7 +21,6 @@
 %-------------------------------------------------------------------------------
 
 % Choose between circle|rectangle, edge|noedge and left|right.
-\title{Curriculum Vitae}
 \photo[circle,edge,left]{./profile.jpg} 
 \name{John}{Doe}
 \fullname{John Something Doe}
@@ -44,6 +43,11 @@
 
 
 \begin{document}
+
+\makefooter
+{\today}
+{ \dotsep Curriculum Vitae}
+{\thepage}
 
 \maketitle[right]
 
