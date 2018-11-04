@@ -59,7 +59,7 @@
 % Needed for drawing graphics
 \RequirePackage{graphicx}
 \RequirePackage{float}
-\RequirePackage{epstopdf}
+%\RequirePackage{epstopdf}
 \RequirePackage[export]{adjustbox} 
 
 % Needed for drawing rectanles
@@ -461,7 +461,7 @@
 \newif\ifsocialstart%
 \newcommand{\parsesocial}[3][]{%
   \foreach\id in #2{%
-    \ifsocialstart\socialstartfalse\else\SocialSep\fi%
+    \ifsocialstart\global\socialstartfalse\else\SocialSep\fi%
     \mbox{\ifempty{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
   }%
 }%
@@ -479,7 +479,7 @@
     \ifthenelse{\equal{\@barsocialalign}{left}}{\raggedright}{\ifthenelse{\equal{\@barsocialalign}{right}}{\raggedleft}{\centering}}%
     \headersocialstyle{%
       % Contacts
-      \ifdefined\@phone\setbool{socialstart}{false}\mbox{\faPhoneSquare\headericonsep\@phone}\fi%
+      \ifdefined\@phone\parsesocial{\@phone}{\faPhoneSquare}\fi
       \ifdefined\@email\parsesocial[mailto:]{\@email}{\faEnvelope}\fi%
       \ifdefined\@skype\parsesocial{\@skype}{\faSkype}\fi%
       % Personal pages, portfolios and repositories 
