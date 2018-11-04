@@ -164,7 +164,7 @@
 \setlength\afterheaderskip{6mm}
 \setlength\datecolumnwidth{35mm}
 \setlength\begincvsectionskip{7mm plus 1mm minus 3mm}
-\setlength\cvsectionskip{6mm plus 1mm minus 2mm}
+\setlength\cvsectionskip{8mm plus 1mm minus 1mm}
 \setlength\cventryskip{2mm plus 0.5mm minus 1mm}
 \setlength\cventriesskip{7mm plus 4mm minus 2mm}
 
@@ -566,11 +566,11 @@
   \rowtitlestyle{#1} & \textparagraphstyle\rowtextstyle #2\\%
 }
 
-\newenvironment{cvrows}[1][L]{%
+\newenvironment{cvrows}[1][J]{%
   \tabcolsep=5pt%
   \extrarowheight=5pt%
   \vspace*{-1.5\baselineskip}
-  \begin{longtable}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
+  \begin{longtable}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}#1{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
 }{%
   \end{longtable}%
 }%
@@ -581,6 +581,8 @@
 %-------------------------------------------------------------------------------
 
 \newif\ifdatecolumnleft
+\datecolumnlefttrue
+
 \newenvironment{cventries}[1][left]{%
   \def\@cvdatealign{left}
   \@for\tmp:=#1\do{%
@@ -677,7 +679,7 @@
 
 \newcommand{\makepersonaldetails}{%
   \section{Personal details}%
-  \begin{cvrows}%
+  \begin{cvrows}[L]%
     % All personal
     \ifdefined\@fullname\cvrow{Full name}{\parsepersonal{\@fullname}}\fi%
     \ifdefined\@nationality\cvrow{Nationality}{\parsepersonal{\@nationality}}\fi%
