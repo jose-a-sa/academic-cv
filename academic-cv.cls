@@ -605,7 +605,7 @@
         & \baselineskip=8pt\entrymarkstyle{#4}%
       }%
       \ifempty{#5}{}{\\%
-      & \textparagraphstyle\justifying\entrydescriptionstyle{#5}%
+      & \textparagraphstyle\entrydescriptionstyle{#5}%
     }%
     \end{tabular*}%
   \else%
@@ -616,7 +616,7 @@
         \baselineskip=8pt\entrymarkstyle{#4} & %
       }%
       \ifempty{#5}{}{\\%
-      \textparagraphstyle\justifying\entrydescriptionstyle{#5} & %
+      \textparagraphstyle\entrydescriptionstyle{#5} & %
       }%
     \end{tabular*}%
   \fi%
