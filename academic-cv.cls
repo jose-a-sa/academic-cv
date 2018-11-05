@@ -159,11 +159,11 @@
 \newlength\cventriesskip
 
 \setlength\headerheight{35mm}
-\setlength\befphotoskip{-12mm}
-\setlength\befheadernameskip{-8mm}
+\setlength\befphotoskip{-18mm}
+\setlength\befheadernameskip{-16mm}
 \setlength\befsocialbarskip{1.2mm}
 \setlength\photoborderthickness{0.6mm}
-\setlength\afterheaderskip{6mm}
+\setlength\afterheaderskip{3mm minus 2mm}
 \setlength\datecolumnwidth{35mm}
 \setlength\begincvsectionskip{7mm plus 1mm minus 3mm}
 \setlength\cvsectionskip{8mm plus 1mm minus 1mm}
@@ -524,22 +524,24 @@
     \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right} \or \equal{\tmp}{center}}%
       {\let\@cvheaderalign\tmp}{}%
   }%
-  \ifthenelse{\isundefined{\@photo}}{%
-    \setlength{\headertextwidth}{0.87\textwidth}%
-    \setlength{\headerphotowidth}{0mm}%
-  }{%
+  \ifdefined\@photo%
     \setlength{\headertextwidth}{0.76\textwidth}%
     \setlength{\headerphotowidth}{0.24\textwidth}%
-  }%
+  \else%
+    \setlength{\headertextwidth}{0.87\textwidth}%
+    \setlength{\headerphotowidth}{0mm}%
+  \fi%
   \ifbool{colorheader}{%
     \begin{tikzpicture}[remember picture,overlay]
       \node[shape=rectangle, fill=accent, minimum height=\headerboxheight, minimum width=\paperwidth, anchor=north] at (current page.north){};
     \end{tikzpicture}%
   }{}%
   \ifthenelse{\equal{\@cvheaderalign}{left}}{\raggedright}{\ifthenelse{\equal{\@cvheaderalign}{right}}{\raggedleft}{\centering}}%
-  \begin{minipage}[c][\headerheight][c]{\headerphotowidth}%
-    \ifthenelse{\equal{\@photoalign}{left}}{\raggedright\drawphoto}{}%
-  \end{minipage}%
+  \ifthenelse{\equal{\@photoalign}{left}}{%
+    \begin{minipage}[c][\headerheight][c]{\headerphotowidth}%
+      \raggedright\drawphoto%
+    \end{minipage}%
+  }{}%
   \begin{minipage}[c][\headerheight][c]{\headertextwidth}%
     \baselineskip=12pt
     \vspace*{\befheadernameskip}%
@@ -551,9 +553,11 @@
     \vspace*{\befsocialbarskip}%
     \drawsocialbar[\@cvheaderalign]%
   \end{minipage}%
-  \begin{minipage}[c][\headerheight][c]{\headerphotowidth}%
-    \ifthenelse{\equal{\@photoalign}{right}}{\raggedleft\drawphoto}{}%
-  \end{minipage}%
+  \ifthenelse{\equal{\@photoalign}{right}}{%
+    \begin{minipage}[c][\headerheight][c]{\headerphotowidth}%
+      \raggedleft\drawphoto%
+    \end{minipage}%
+  }{}%
   \vspace*{\afterheaderskip}%
 }%
 
