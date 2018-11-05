@@ -1,5 +1,5 @@
 %!TEX encoding = UTF-8 Unicode
-\documentclass[11pt, a4paper]{academic-cv}
+\documentclass[11pt, a4paper, fill]{academic-cv}
 
 %-------------------------------------------------------------------------------
 %	PACKAGES
@@ -12,7 +12,7 @@
 %-------------------------------------------------------------------------------
 
 % For more colors check the package 'xcolor-material'
-\colorlet{accent}{MaterialBlue600}
+\colorlet{accent}{MaterialRed600}
 
 
 %-------------------------------------------------------------------------------
@@ -28,18 +28,23 @@
 \nationality{Country}
 \position{Current Position}
 \address{Adress line 1}{Adress line 2\dotsep Zip-Code\dotsep Country}
-\phone{{(+0123) 987654321},{(+0123) 987654321}}
-\email{{email1@domain.com}, {email1@domain.com}}
+\phone{{(+0123) 987654321}}
+\email{{email1@domain.com}}
 \skype{skype-id}
 \homepage{jonh-doe.com}
 \linkedin{linkedin-user}
 \github{github-user}
-%\gitlab{gitlab-user}
+\gitlab{gitlab-user}
+\academia[instituition/id]{https://instituition.academia.edu/id}
+\arxiv[arXiv]{https://arxiv.org/search/?searchtype=author\&query=id}
+\googlescholar[Scholar]{https://scholar.google.com/citations?user=id}
+\inspirehep{id}
 \orcid{0000-0001-2345-6789}
-%\facebook{fb-user}
-\twitter{@tw-handle}
-%\reddit{rd-user}
-%\stackoverflow{stackoverflow-id}
+\researchgate{id}
+\facebook{fb-user}
+\twitter{@handle}
+\reddit{rd-id}
+\stackoverflow{so-id}
 
 
 \begin{document}
@@ -52,9 +57,7 @@
 \maketitle[right]
 
 %\makepersonaldetails
-
 \input{cv/section1}
-\makepersonaldetails
 \input{cv/section2}
 
 
