@@ -79,6 +79,8 @@
 \RequirePackage{xcolor, xcolor-material}
 % Needed to manage strings
 \RequirePackage{xstring}
+% Needed to manage commands
+\RequirePackage{xargs}
 % Needed to use \ifxetex-\else-\fi statement
 \RequirePackage{ifxetex}
 % Needed to use \if-\then-\else statement
@@ -387,7 +389,13 @@
 \newcommand*{\linkedin}[1]{\def\@linkedin{#1}}
 \newcommand*{\github}[1]{\def\@github{#1}}
 \newcommand*{\gitlab}[1]{\def\@gitlab{#1}}
+% Academic pages
+\newcommand*{\academia}[2][Academia]{\def\@academialabel{#1}\def\@academia{#2}}
+\newcommand*{\arxiv}[2][arXiv]{\def\@arxivlabel{#1}\def\@arxiv{#2}}
+\newcommand*{\googlescholar}[2][Scholar]{\def\@gscholarlabel{#1}\def\@gscholar{#2}}
+\newcommand*{\inspirehep}[1]{\def\@inspirehep{#1}}
 \newcommand*{\orcid}[1]{\def\@orcid{#1}}
+\newcommand*{\researchgate}[1]{\def\@researchgate{#1}}
 % Other social
 \newcommand*{\facebook}[1]{\def\@facebook{#1}}
 \newcommand*{\twitter}[1]{\def\@twitter{#1}}
@@ -465,6 +473,12 @@
     \mbox{\ifempty{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
   }%
 }%
+\newcommand{\parsesociallabel}[3][]{%
+  \foreach\id in #2{%
+    \ifsocialstart\global\socialstartfalse\else\SocialSep\fi%
+    \mbox{\href{#2}{#3\headericonsep#1}}%
+  }%
+}%
 
 % Print out the social labels
 \newcommand*{\drawsocialbar}[1][center]{%
@@ -487,7 +501,13 @@
       \ifdefined\@linkedin\parsesocial[https://www.linkedin.com/in/]{\@linkedin}{\faLinkedinSquare}\fi%
 			\ifdefined\@github\parsesocial[https://github.com/]{\@github}{\faGithub}\fi%
       \ifdefined\@gitlab\parsesocial[https://gitlab.com/]{\@gitlab}{\faGitlab}\fi%
+      % Academic pages
+      \ifdefined\@academia\parsesociallabel[\@academialabel]{\@academia}{\aiAcademia}\fi%
+      \ifdefined\@arxiv\parsesociallabel[\@arxivlabel]{\@arxiv}{\aiarXiv}\fi%
+      \ifdefined\@gscholar\parsesociallabel[\@gscholarlabel]{\@gscholar}{\aiGoogleScholar}\fi%
+      \ifdefined\@inspirehep\parsesocial[https://inspirehep.net/author/profile/]{\@inspirehep}{\aiInspire}\fi%
       \ifdefined\@orcid\parsesocial[https://orcid.org/]{\@orcid}{\aiOrcid}\fi%
+      \ifdefined\@researchgate\parsesocial[https://www.researchgate.net/profile/]{\@researchgate}{\aiResearchGate}\fi%
       %Other social
       \ifdefined\@facebook\parsesocial[https://facebook.com/]{\@facebook}{\faFacebookOfficial}\fi%
 			\ifdefined\@twitter\parsesocial[https://twitter.com/]{\@twitter}{\faTwitter}\fi%
@@ -695,8 +715,14 @@
     \ifdefined\@homepage\cvrow{Homepage}{\parsepersonal[http://]{\@homepage}}\fi%
     \ifdefined\@linkedin\cvrow{LinkedIn}{\parsepersonal[https://www.linkedin.com/in/]{\@linkedin}}\fi%
     \ifdefined\@github\cvrow{GitHub}{\parsepersonal[https://github.com/]{\@github}}\fi%
-    \ifdefined\@gilab\cvrow{GitLab}{\parsepersonal[https://gitlab.com/]{\@gilab}}\fi%
+    \ifdefined\@gitlab\cvrow{GitLab}{\parsepersonal[https://gitlab.com/]{\@gitlab}}\fi%
+    % Academic pages
+    \ifdefined\@academia\cvrow{Academia}{\href{\@academia}{\@academia}}\fi%
+    \ifdefined\@arxiv\cvrow{arXiv}{\href{\@arxiv}{\@arxiv}}\fi%
+    \ifdefined\@gscholar\cvrow{Google Scholar}{\href{\@gscholar}{\@gscholar}}\fi%
+    \ifdefined\@inspirehep\cvrow{inSPIRE-HEP}{\parsepersonal[https://inspirehep.net/author/profile/]{\@inspirehep}}\fi%
     \ifdefined\@orcid\cvrow{Orcid}{\parsepersonal[https://orcid.org/]{\@orcid}}\fi%
+    \ifdefined\@researchgate\cvrow{ResearchGate}{\parsepersonal[https://www.researchgate.net/profile/]{\@researchgate}}\fi%
     %Other social
     \ifdefined\@facebook\cvrow{Facebook}{\parsepersonal[https://facebook.com/]{\@facebook}}\fi%
     \ifdefined\@twitter\cvrow{Twitter}{\parsepersonal[https://twitter.com/]{\@twitter}}\fi%
