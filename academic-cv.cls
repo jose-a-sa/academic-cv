@@ -770,11 +770,11 @@
   \raggedright%
   \tabcolsep=0pt%
   \extrarowheight=0pt%
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
-    \ifdefined\@recipientname\recipienttitlestyle{\@recipientname}\fi & \letterdatestyle{\@letterdate}
-  \end{tabular*}
-  \ifdefined\@recipientaddress\recipientaddressstyle{\@recipientaddress}\\\vspace{2.2\baselineskip}\else\\\vspace{3.0\baselineskip}\fi%
-  \ifdefined\@lettertitle\lettertitlestyle{\@lettertitle}\\\vspace{1.5\baselineskip}\fi%
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}%
+    \ifdefined\@recipientname\recipienttitlestyle{\@recipientname}\fi & \letterdatestyle{\@letterdate}%
+  \end{tabular*}%
+  \ifdefined\@recipientaddress\recipientaddressstyle{\@recipientaddress}\\\vspace{2.2\baselineskip}\else\ifdefined\@recipientname\\\vspace{3.0\baselineskip}\else\\\vspace{0.5\baselineskip}\fi\fi%
+  \ifdefined\@lettertitle\lettertitlestyle{\@lettertitle}\\\vspace{1.2\baselineskip}\fi%
   \ifdefined\@letteropening\lettertextstyle{\@letteropening}\vspace{0.3\baselineskip}\fi%
 }
 
@@ -794,5 +794,6 @@
   \lettertextstyle
   \letterparagraphstyle
 }{%
+  \par
   \makeletterclosing
 }
