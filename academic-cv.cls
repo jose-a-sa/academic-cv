@@ -42,7 +42,7 @@
 \DeclareOption{noaccent}{\coloraccentsfalse\colorheaderfalse}
 \DeclareOption{letter}{\lettertrue\detailedfalse}
 
-\setlength\overfullrule{0pt}
+\overfullrule=0pt
 
 % Inherit options of article
 \DeclareOption*{%
@@ -66,7 +66,7 @@
 \RequirePackage{tikz}
 \usetikzlibrary{positioning,calc}
 % Needed to make fixed length table
-\RequirePackage{array, longtable}
+\RequirePackage{array, longtable, multirow, booktabs}
 % Needed to handle list environment
 \RequirePackage{enumitem}
 % Needed to handle text alignment
@@ -133,62 +133,76 @@
 %   SPACINGS & LAYOUT
 %-------------------------------------------------------------------------------
 
-% Document lengths
-\global\parskip=0pt
-\global\parindent=0pt
-\global\baselineskip=12pt
-
-% Document lengths
-\newlength\headertextwidth
-\newlength\headerphotowidth
-\newlength\headerheight
-\newlength\headerboxheight
+%% GEOMETRY
 \newlength\topspacing
 \newlength\sidespacing
 \newlength\bottomspacing
 \newlength\footskipspacing
+
+\ifdetailed
+  \topspacing=20mm
+  \sidespacing=20mm
+  \bottomspacing=23mm
+  \footskipspacing=10mm
+\else
+  \topspacing=15mm
+  \sidespacing=16mm
+  \bottomspacing=23mm
+  \footskipspacing=10mm
+\fi
+
+\geometry{left=\sidespacing, top=\topspacing, right=\sidespacing, bottom=\bottomspacing, footskip=\footskipspacing}
+
+% PARAGRAPH
+\global\parskip=0pt
+\global\parindent=0pt
+\global\baselineskip=12pt
+
+% HEADER
+\newlength\headerheight
+\newlength\headerboxheight
 \newlength\befphotoskip
 \newlength\befheadernameskip
 \newlength\befsocialbarskip
 \newlength\photoborderthickness
 \newlength\afterheaderskip
-\newlength\datecolumnwidth
-\newlength\begincvsectionskip
-\newlength\cvsectionskip
-\newlength\cventryskip
-\newlength\cventriesskip
-
-\setlength\headerheight{35mm}
-\setlength\befphotoskip{-18mm}
-\setlength\befheadernameskip{-16mm}
-\setlength\befsocialbarskip{1.2mm}
-\setlength\photoborderthickness{0.6mm}
-\setlength\afterheaderskip{3mm minus 2mm}
-\setlength\datecolumnwidth{35mm}
-\setlength\begincvsectionskip{7mm plus 1mm minus 3mm}
-\setlength\cvsectionskip{8mm plus 1mm minus 1mm}
-\setlength\cventryskip{2mm plus 0.5mm minus 1mm}
-\setlength\cventriesskip{7mm plus 4mm minus 2mm}
-
-
-\ifdetailed
-  \setlength\topspacing{20mm}
-  \setlength\sidespacing{20mm}
-  \setlength\bottomspacing{23mm}
-  \setlength\footskipspacing{10mm}
-\else
-  \setlength\topspacing{15mm}
-  \setlength\sidespacing{16mm}
-  \setlength\bottomspacing{23mm}
-  \setlength\footskipspacing{10mm}
-\fi
-\setlength\headerboxheight{\dimexpr\headerheight+\topspacing\relax}
+\headerheight=35mm
+\befphotoskip=-18mm
+\befheadernameskip=-16mm
+\befsocialbarskip=1.2mm
+\photoborderthickness=0.6mm
+\afterheaderskip=3mm minus 2mm
+\headerboxheight=\dimexpr\headerheight+\topspacing\relax
 \addtolength{\headerboxheight}{0.25\befheadernameskip}
 
-%% Geometry
-\geometry{left=\sidespacing, top=\topspacing, right=\sidespacing, bottom=\bottomspacing, footskip=\footskipspacing}
+% CV SECTION
+\newlength\cvsectionskip
+\newlength\clearcvsectionskip
+\clearcvsectionskip=5mm plus 1mm minus 1mm
+\cvsectionskip=5mm plus 1mm minus 0mm
 
-%% Header & Footer
+% CV ENTRIES
+\newlength\datecolumnwidth
+\newlength\cventryskip
+\newlength\cventriesskip
+\datecolumnwidth=32mm
+\cventriesskip=0mm plus 0.5mm minus 1.0mm
+\cventryskip=2.5mm plus 0.5mm minus 0.5mm
+
+% CV ROWS
+\newlength\cvrowcolumnwidth
+\newlength\cvrowsskip
+\newlength\cvrowsbefskip
+\cvrowcolumnwidth=32mm
+\cvrowsskip=0mm plus 1mm minus 0mm
+\cvrowsbefskip=-6mm minus 1mm
+
+% CV TEXT
+\newlength\cvtextskip
+\cvtextskip=2mm plus 1mm minus 1mm
+
+
+%% HEADER AND FOOTER
 % Set offset to each header and footer
 \fancyhfoffset{0em}
 % Remove head rule
@@ -246,7 +260,7 @@
   BoldFont=*-Bold,
   BoldItalicFont=*-BoldItalic,
 ]{Roboto}
-\newfontfamily\roboto[
+\newfontfamily\robotolight[
   Path=\@fontdir,
   UprightFont=*-Thin,
   ItalicFont=*-ThinItalic,
@@ -291,17 +305,9 @@
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{J}[1]{>{\justifying\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 
-% Define columns
-\newcolumntype{\cventryaligndateleft}[1]{R{#1}}
-\newcolumntype{\cventryaligndateright}[1]{R{#1}}
-\newcolumntype{\cvrowaligntitle}[1]{R{#1}}
-
 % Social bar
 \newcommand\headericonsep{\space}
 \newcommand\headersocialsep{\kern.5em\textbar\kern.5em}
-
-% Use to execute conditional statements by checking empty string
-\newcommand*{\ifempty}[3]{\ifthenelse{\isempty{#1}}{#2}{#3}}
 
 % Use to separate strings in the personal informantion section
 \newcommand{\dotsep}{\kern.5em\textbullet\kern.5em}
@@ -311,8 +317,9 @@
 %    FONT STYLES
 %-------------------------------------------------------------------------------
 
-\newcommand*{\textparagraphstyle}{\parindent=0pt\parskip=2pt\baselineskip=11pt}
+\newcommand*{\bodyparagraphstyle}{\parindent=0pt\parskip=2pt\baselineskip=11pt}
 \newcommand*{\letterparagraphstyle}{\parindent=0pt\parskip=4pt\baselineskip=13pt}
+\newcommand*{\bodytextstyle}[1]{\fontsize{9.5pt}{1em}\bodyfontlight\color{text}}
 
 % TITLEPAGE
 \newcommand*{\titlenamestyle}[2]{{\fontsize{48pt}{1em}\headerfontlight\firstnamecolor{#1}\space\headerfont\bfseries\lastnamecolor{#2}}}
@@ -328,15 +335,16 @@
 \newcommand*{\footerstyle}[1]{{\fontsize{9pt}{1em}\footerfont\scshape\color{lighttext}#1}}
 
 % SECTION
-\newcommand*{\sectionstyle}[1]{{\fontsize{19pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
-\newcommand*{\subsectionstyle}[1]{{\fontsize{18pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
+\newcommand*{\sectionstyle}[1]{{\fontsize{17pt}{1em}\headerfont\bfseries\color{sectioncolor}\@sectionaccent#1}}
+%\newcommand*{\subsectionstyle}[1]{{\fontsize{12.5pt}{1em}\headerfont\scshape\textcolor{text}{#1}}}
 
 % ENTRIES
 \newcommand*{\entrydatestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\slshape\entrydatecolor{#1}}}
 \newcommand*{\entrytitlestyle}[1]{{\fontsize{10.5pt}{1em}\bodyfontlight\bfseries\color{text}#1}}
 \newcommand*{\entrylocationstyle}[1]{{\fontsize{10pt}{1em}\bodyfont\scshape\color{lighttext}#1}}
 \newcommand*{\entrymarkstyle}[1]{{\fontsize{9pt}{1em}\headerfont\color{darktext}#1}}
-\newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9.5pt}{1em}\bodyfontlight\upshape\color{text}#1}}
+\newcommand*{\entrydescriptionstyle}[1]{{\fontsize{9.5pt}{1em}\bodyfontlight\color{text}#1}}
+\newcommand*{\emphstyle}[1]{{\fontsize{9.5pt}{1em}\bodyfont\color{text}#1}}
 
 % ROWS
 \newcommand*{\rowtitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\scshape\color{text}{#1}}}
@@ -378,7 +386,7 @@
 \newcommand*{\fullname}[1]{\def\@fullname{#1}}
 \newcommand*{\birthdate}[1]{\def\@birthdate{#1}}
 \newcommand*{\nationality}[1]{\def\@nationality{#1}}
-\newcommand*{\address}[2]{\ifempty{#2}{\def\@address{#1}}{\def\@address{#1}\def\@addressother{#2}}}
+\newcommand*{\address}[2]{\ifblank{#2}{\def\@address{#1}}{\def\@address{#1}\def\@addressother{#2}}}
 \newcommand*{\position}[1]{\def\@position{#1}}
 % Contacts
 \newcommand*{\phone}[1]{\def\@phone{#1}}
@@ -470,7 +478,7 @@
 \newcommand{\parsesocial}[3][]{%
   \foreach\id in #2{%
     \ifsocialstart\global\socialstartfalse\else\SocialSep\fi%
-    \mbox{\ifempty{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
+    \mbox{\ifblank{#1}{#3\headericonsep\id}{\href{#1\id}{#3\headericonsep\id}}}%
   }%
 }%
 \newcommand{\parsesociallabel}[3][]{%
@@ -518,6 +526,9 @@
 }%
 
 % Draw the header with/without photo, name, position, ..., and social bar
+\newlength\headertextwidth
+\newlength\headerphotowidth
+
 \newcommand*{\makeheader}[1][center]{%
   \def\@cvheaderalign{center}
   \@for\tmp:=#1\do{%
@@ -525,11 +536,11 @@
       {\let\@cvheaderalign\tmp}{}%
   }%
   \ifdefined\@photo%
-    \setlength{\headertextwidth}{0.76\textwidth}%
-    \setlength{\headerphotowidth}{0.24\textwidth}%
+    \headertextwidth=0.76\textwidth%
+    \headerphotowidth=0.24\textwidth%
   \else%
-    \setlength{\headertextwidth}{0.87\textwidth}%
-    \setlength{\headerphotowidth}{0mm}%
+    \headertextwidth=0.87\textwidth%
+    \headerphotowidth=0mm%
   \fi%
   \ifbool{colorheader}{%
     \begin{tikzpicture}[remember picture,overlay]
@@ -571,13 +582,13 @@
   \sectionstyle{#1}%
   \phantomsection%
   \vhrulefill{1pt}%
-  \par\color{text}%
-  \vspace*{\begincvsectionskip}%
+  \par\par\color{text}%
+  \vspace*{\cvsectionskip}%
 }%
 
 % Clears section, adds a page break if the detailed flag is included
 \newcommand{\clearsection}{%
-  \ifdetailed\newpage\else\vspace*{\cvsectionskip}\fi%
+  \ifdetailed\newpage\else\vspace*{\clearcvsectionskip}\fi%
 }%
 
 
@@ -586,17 +597,17 @@
 %-------------------------------------------------------------------------------
 
 \newcommand{\cvrow}[2]{%
-  \textparagraphstyle%
-  \rowtitlestyle{#1} & \textparagraphstyle\rowtextstyle #2\\%
+  \bodyparagraphstyle\rowtitlestyle{#1} & \bodyparagraphstyle\rowtextstyle #2\\%
 }
 
 \newenvironment{cvrows}[1][J]{%
   \tabcolsep=5pt%
   \extrarowheight=5pt%
-  \vspace*{-1.5\baselineskip}
-  \begin{longtable}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}#1{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}%
+  \vspace*{\cvrowsbefskip}
+  \begin{longtable}{@{\extracolsep{\fill}}R{\cvrowcolumnwidth}#1{\textwidth-\cvrowcolumnwidth-2.5\tabcolsep}}%
 }{%
   \end{longtable}%
+  \vspace*{\cvrowsskip}%
 }%
 
 
@@ -607,13 +618,13 @@
 \newif\ifdatecolumnleft
 \datecolumnlefttrue
 
-\newenvironment{cventries}[1][left]{%
-  \def\@cvdatealign{left}
+\newenvironment{cventries}[1][L]{%
+  \def\@cvdatealign{L}
   \@for\tmp:=#1\do{%
-    \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right}}%
+    \ifthenelse{\equal{\tmp}{L} \or \equal{\tmp}{R}}%
       {\let\@cvdatealign\tmp}{}%
   }%
-  \ifthenelse{\equal{\@cvdatealign}{left}}{\datecolumnlefttrue}{\datecolumnleftfalse}%
+  \ifthenelse{\equal{\@cvdatealign}{L}}{\datecolumnlefttrue}{\datecolumnleftfalse}%
   \begin{center}
 }{%
   \end{center}
@@ -624,25 +635,25 @@
   \extrarowheight=-1pt%
   \tabcolsep=5pt%
   \ifdatecolumnleft%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}\cventryaligndateleft{\datecolumnwidth}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}@{\extracolsep{\fill}}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}R{\datecolumnwidth}L{\textwidth-\datecolumnwidth-2.5\tabcolsep}}
       \baselineskip=8pt\entrydatestyle{#1} & \baselineskip=8pt\entrytitlestyle{#2} \\[-1pt]%
-      & \baselineskip=8pt\entrylocationstyle{#3}%
-      \ifempty{#4}{}{\\%
-        & \baselineskip=8pt\entrymarkstyle{#4}%
+      & \baselineskip=8pt\entrylocationstyle{#3} \\%
+      \ifblank{#4}{}{%
+        & \baselineskip=8pt\entrymarkstyle{#4} \\%
       }%
-      \ifempty{#5}{}{\\%
-      & \textparagraphstyle\entrydescriptionstyle{#5}%
+      \ifblank{#5}{}{%
+      & \bodyparagraphstyle\entrydescriptionstyle{#5} \\%
     }%
     \end{tabular*}%
   \else%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-3.5\tabcolsep}\cventryaligndateright{\datecolumnwidth}@{\extracolsep{\fill}}}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}L{\textwidth-\datecolumnwidth-2.5\tabcolsep}R{\datecolumnwidth}}
       \baselineskip=8pt\entrytitlestyle{#2} & \baselineskip=8pt\entrydatestyle{#1} \\[-1pt]%
-      \baselineskip=8pt\entrylocationstyle{#3} & %
-      \ifempty{#4}{}{\\%
-        \baselineskip=8pt\entrymarkstyle{#4} & %
+      \baselineskip=8pt\entrylocationstyle{#3} & \\%
+      \ifblank{#4}{}{%
+        \baselineskip=8pt\entrymarkstyle{#4} & \\%
       }%
-      \ifempty{#5}{}{\\%
-      \textparagraphstyle\entrydescriptionstyle{#5} & %
+      \ifblank{#5}{}{%
+        \multicolumn{2}{@{\extracolsep{\fill}}L{\textwidth}}{\bodyparagraphstyle\entrydescriptionstyle{#5}}\\%
       }%
     \end{tabular*}%
   \fi%
@@ -658,14 +669,14 @@
 \newenvironment{cvitems}{%
   \vspace*{-13pt}%
   \begin{justify}%
-  \begin{itemize}[leftmargin=2ex, nosep, noitemsep, topsep=-13pt]%
-    \textparagraphstyle
+  \begin{itemize}[leftmargin=2ex, nosep, noitemsep]%
+    \bodyparagraphstyle%
     \renewcommand{\labelitemi}{\bullet}%
 }{%
   \end{itemize}%
   \end{justify}%
-  \vspace*{-11pt}%
-  \textparagraphstyle
+  \vspace*{-10pt}%
+  \bodyparagraphstyle%
 }%
 
 
@@ -696,7 +707,7 @@
 \newcommand{\parsepersonal}[2][]{%
   \ifdetailed\renewcommand*{\dotsep}{\linebreak}\fi%
   \foreach\id in #2{%
-    \ifempty{#1}{\id}{\href{#1\id}{\id}}\linebreak%
+    \ifblank{#1}{\id}{\href{#1\id}{\id}}\linebreak%
   }%
   \unpenalty\unskip\unpenalty%
 }%
@@ -748,6 +759,7 @@
   \else%
     \makeheader[#1]
   \fi%
+  \raggedright
 }%
 
 
@@ -797,3 +809,12 @@
   \par
   \makeletterclosing
 }
+
+\newenvironment{cvtext}{%
+  \bodytextstyle%
+  \letteraragraphstyle%
+  \begin{justify}%
+}{%
+  \end{justify}%
+  \vspace*{\cvtextskip}
+}%
